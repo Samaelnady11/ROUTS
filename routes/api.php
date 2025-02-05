@@ -9,8 +9,12 @@ use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Api\ChildController;
-use App\Http\Controllers\SMSController;// Authentication Routes
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SMSController;
+use App\Http\Controllers\StudentController; // إضافة المسار
+use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\UserController;
+
+// Authentication Routes
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
@@ -18,10 +22,11 @@ Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 // Routes requiring authentication
-Route::middleware('auth:sanctum')->group(function () {
-Route::get('/user', [AuthController::class, 'getUser']);
-Route::post('logout', [AuthController::class, 'logout']);
-});
+//Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [AuthController::class, 'getUser']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('/parent/update', [UserController::class, 'updateParentProfile'])->name('parent.update');
+//});
 
 // Students Routes
 Route::apiResource('students', StudentController::class);
@@ -49,12 +54,19 @@ Route::post('/google-login', [GoogleAuthController::class, 'googleLogin']);
 // Notification Routes
 Route::post('/send-emergency-notification', [NotificationController::class, 'sendEmergencyNotification']);
 
-
+// Child Routes
 Route::post('/children', [ChildController::class, 'store']);
 Route::get('/children', [ChildController::class, 'index']);
 //Route::get('/children/{id}', [ChildController::class, 'show']);
 
 
+// SMS Routes
 Route::post('/send-sms', [SMSController::class, 'sendSMS']);
 
+// Student Details Route
 Route::get('student-details', [StudentController::class, 'getStudentDetails']);
+
+// routes/api.php
+
+
+Route::get('/weather', [WeatherController::class, 'show']);
