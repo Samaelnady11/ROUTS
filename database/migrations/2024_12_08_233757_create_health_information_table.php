@@ -10,8 +10,8 @@ class CreateHealthInformationTable extends Migration
     {
         Schema::create('health_information', function (Blueprint $table) {
             $table->id();
-            $table->string('student_id'); // Referencing school-provided student ID
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');  // This ensures type compatibility // Referencing school-provided student ID
+            // $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->text('condition')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

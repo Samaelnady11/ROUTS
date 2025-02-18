@@ -41,5 +41,8 @@ return [
         'from' => env('TWILIO_PHONE_NUMBER'),
     ],
 
+    'fcm' => [
+        'server_key' => env('FCM_SERVER_KEY'),
+    ],
 
 ];

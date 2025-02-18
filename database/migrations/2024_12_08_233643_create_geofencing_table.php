@@ -10,8 +10,7 @@ class CreateGeofencingTable extends Migration
     {
         Schema::create('geofencing', function (Blueprint $table) {
             $table->id();
-            $table->string('student_id'); // Link geofence to a student
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->foreignId('student_id')->constrained();
             $table->decimal('latitude', 10, 8); // Latitude of the geofence center
             $table->decimal('longitude', 11, 8); // Longitude of the geofence center
             $table->integer('geofence_radius'); // Radius of the geofence in meters

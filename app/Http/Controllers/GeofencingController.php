@@ -47,7 +47,7 @@ class GeofencingController extends Controller
         }
     }
 
-    // Calculate distance between two points using the Haversine formula
+
     private function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
         $lat1 = deg2rad($lat1);
@@ -63,7 +63,7 @@ class GeofencingController extends Controller
             sin($dlon / 2) * sin($dlon / 2);
 
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        $radius = 6371; // Radius of the Earth in km
-        return $radius * $c * 1000; // Convert to meters
+        $radius = 6371;
+        return $radius * $c * 1000;
     }
 }

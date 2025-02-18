@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bus extends Model
 {
@@ -46,5 +47,25 @@ class Bus extends Model
             'current_latitude' => $latitude,
             'current_longitude' => $longitude,
         ]);
+    }
+
+    public function currentLocation()
+    {
+        return $this->hasOne(BusLocation::class)->latest();
+    }
+
+    public function locations()
+    {
+        return $this->hasMany(BusLocation::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function geofenceSetting()
+    {
+        return $this->hasOne(GeofenceSetting::class);
     }
 }
