@@ -34,7 +34,7 @@ class BusLocationController extends Controller
 
 
         try {
-            $this->geofencingService->checkProximity($bus);
+            $this->geofencingService->checkProximity($bus, $validated['latitude'], $validated['longitude']);
         } catch (\Exception $e) {
             Log::error('Geofencing Error: ' . $e->getMessage());
         }

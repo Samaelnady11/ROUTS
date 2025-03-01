@@ -11,11 +11,20 @@ class Geofencing extends Model
 
     protected $table = 'geofencing';
 
+    // protected $fillable = [
+    //     'student_id',
+    //     'latitude',
+    //     'longitude',
+    //     'geofence_radius',
+    // ];
+
     protected $fillable = [
-        'student_id',
+        'name',
         'latitude',
         'longitude',
-        'geofence_radius',
+        'radius',
+        'student_id',
+        'bus_id',
     ];
 
     // Relationship with Student model

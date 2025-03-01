@@ -12,7 +12,8 @@ return new class extends Migration
         if (!Schema::hasTable('users')) {
             Schema::create('users', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('supervisor_id')->references('supervisor_id')->on('supervisor_features');
+                $table->string('role_based_id')->unique()->default('1'); // Unique ID for roles (driver, supervisor, etc.)
+                // $table->string('supervisor_id')->nullable()->unique()->references('supervisor_id')->on('supervisor_features');
                 $table->string('name');
                 $table->string('email')->unique();
                 $table->string('phone')->default(''); // إضافة الحقل phone مع الفاصلة المنقوطة

@@ -9,7 +9,7 @@ class School extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'address'];
+    protected $fillable = ['school_name', 'school_id'];
 
     public function students()
     {
@@ -20,4 +20,3 @@ class School extends Model
         return $this->hasMany(Child::class);
     }
 }
-

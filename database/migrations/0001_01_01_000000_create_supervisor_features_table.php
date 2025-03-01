@@ -10,8 +10,9 @@ class CreateSupervisorFeaturesTable extends Migration
     {
         Schema::create('supervisor_features', function (Blueprint $table) {
             $table->id();
-            $table->string('supervisor_id'); // Foreign key referencing clients.role_based_id
-            $table->foreign('supervisor_id')->references('role_based_id')->on('clients')->onDelete('cascade');
+            // $table->unsignedBigInteger('supervisor_id');
+            // Foreign key referencing clients.role_based_id
+            $table->string('supervisor_id')->references('supervisor_id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('report_id')->nullable();
             $table->integer('reports_handled')->default(0);
             $table->enum('emergency_status', ['Active', 'Resolved', 'None'])->default('None');

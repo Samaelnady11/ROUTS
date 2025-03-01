@@ -21,11 +21,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            UserSeeder::class,
+            UsersTableSeeder::class,
+            ParentsTableSeeder::class,
+            SchoolsTableSeeder::class,
             RouteAndBusSeeder::class,
-            GeofencingTestSeeder::class,
-            
-            
-        ]); 
+            StudentsTableSeeder::class,
+        ]);
     }
 }

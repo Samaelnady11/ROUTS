@@ -2,82 +2,93 @@
 
 namespace Database\Seeders;
 
+use App\Models\Parents;
 use App\Models\Route;
 use App\Models\Bus;
-use App\Models\Student;
-use Illuminate\Database\Seeder;
 use App\Models\BusLocation;
-// BusLocation::all();
-
+use App\Models\Student;
+use App\Models\School;
+use App\Models\Parent as ParentModel;
+use Illuminate\Database\Seeder;
 
 class RouteAndBusSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        
+        // Create a school
+        $school = School::create([
+            'id' => 1, // Ensure the ID is set to 1
+            'school_name' => 'Glory School',
+            'school_id' => 'SCH001', // Unique school_id
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create a route
         $route = Route::create([
-            // 'id' => 5,
             'route_name' => 'Morning Route 1',
             'start_location' => '30.0444, 31.2357', // Cairo, Egypt
-                'end_location' => '30.8418, 31.3276', // Mansoura, Egypt
-                'optimized_path' => json_encode([
-                    ['lat' => 30.0444, 'lng' => 31.2357], 
-                    ['lat' => 30.1234, 'lng' => 31.2567], 
-                    ['lat' => 30.5678, 'lng' => 31.2789], 
-                    ['lat' => 30.8418, 'lng' => 31.3276]]),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-            // 'description' => 'Morning pickup route for north area'
+            'end_location' => '30.8418, 31.3276', // Mansoura, Egypt
+            'optimized_path' => json_encode([
+                ['lat' => 30.0444, 'lng' => 31.2357],
+                ['lat' => 30.1234, 'lng' => 31.2567],
+                ['lat' => 30.5678, 'lng' => 31.2789],
+                ['lat' => 30.8418, 'lng' => 31.3276]
+            ]),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
+
+        // Create a bus
         $bus = Bus::create([
             'bus_number' => 'TEST-001',
-            'driver_id' => 1, // Make sure this ID exists
-            'supervisor_id' => 2, // Make sure this ID exists
-            'route_id' => 1,  // Make sure to include this
+            'driver_id' => 2, // Ensure this ID exists in the users table
+            'supervisor_id' => 3, // Ensure this ID exists in the users table
+            'route_id' => $route->id,
             'capacity' => 30,
         ]);
 
-        // Create geofence settings for the bus
-        // GeofenceSetting::create([
-        //     'bus_id' => $bus->id,
-        //     'notification_radius' => 500.00, // 500 meters
-        //     'is_active' => true
-        // ]);
-        $parent =[
-            'first_name' => 'essam',
-            'last_name' => 'aref',
-
+        // Create a parent
+        $parent = Parents::create([
+            'user_id' => 1, // Ensure this user_id exists in the users table
             'phone' => '01111111111',
-            'email' => 'mohamed@gmail.com',
-        ];
-
+            'address' => '123 Test St',
+            'gender' => 'Male',
+            'dob' => '1980-01-01',
+            'profile_picture' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         // Create test students with pickup locations
-        // These coordinates are example locations - adjust them based on your testing area
         $students = [
             [
-                'first_name' => 'mohamed',
-                'last_name' => 'essam',
-                'school_id'=>1,
-                'parent_id'=>1,
-                'grade'=>'six',
-                'pickup_address'=>'qanat elswes',
+                'first_name' => 'Mohamed',
+                'last_name' => 'Essam',
+                'school_id' => $school->id,
+                'parent_id' => $parent->id,
+                'grade' => 'six',
+                'pickup_address' => 'Qanat Elswes',
                 'pickup_latitude' => 24.7136, // Example coordinates for Riyadh
                 'pickup_longitude' => 46.6753,
-                'bus_id' => $bus->id
+                'bus_id' => $bus->id,
+                'school_name' => 'Glory School', // Provide a value for school_name
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
-
             [
-                // 'name' => 'Test Student 2',
-                'first_name' => 'ahmed',
-                'last_name' => 'yussef',
-                'school_id'=>1,
-                'parent_id'=>1,
-                'grade'=>'seven',
-                'pickup_address'=>'qanat elswes',
+                'first_name' => 'Ahmed',
+                'last_name' => 'Yussef',
+                'school_id' => $school->id,
+                'parent_id' => $parent->id,
+                'grade' => 'seven',
+                'pickup_address' => 'Qanat Elswes',
                 'pickup_latitude' => 24.7137, // Nearby location
                 'pickup_longitude' => 46.6754,
-                'bus_id' => $bus->id
+                'bus_id' => $bus->id,
+                'school_name' => 'Glory School', // Provide a value for school_name
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ];
 
@@ -93,17 +104,5 @@ class RouteAndBusSeeder extends Seeder
             'speed' => 40,
             'location_timestamp' => now()
         ]);
-
-        // Create route first
-        
-
-        // Then create bus with proper string quotes
-        Bus::create([
-            'bus_number' => 'TEST-001',  // Note the quotes around TEST-001
-            'driver_id' => 1,
-            'supervisor_id' => 2,
-            'route_id' => $route->id,
-            'capacity' => 30
-        ]);
     }
-} 
+}

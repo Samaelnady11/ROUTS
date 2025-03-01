@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('school_name');
+            $table->string('school_id')->unique();
             $table->timestamps();
         });
     }
@@ -19,4 +20,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('schools');
     }
-}; 
+};

@@ -4,29 +4,29 @@ namespace App\Services;
 
 use App\Models\Bus;
 use App\Models\Student;
-use App\Models\ParentNotification; // Ensure this class exists in the specified namespace
-use App\Models\GeofenceLog;
+use App\Models\ParentNotification;
+use App\Models\Geofencing;
 
 class GeofencingService
 {
-    public function checkProximity(Bus $bus)
+    public function checkProximity(Bus $bus, $latitude, $longitude)
     {
-        $currentLocation = $bus->currentLocation;
-        if (!$currentLocation) return;
-
-        $students = $bus->students()->with('parentNotifications')->get();
+        $students = Student::where('bus_id', $bus->id)->with('parentNotifications')->get();
 
         foreach ($students as $student) {
+            $geofence = Geofencing::where('student_id', $student->id)->first();
+            if (!$geofence) {
+                continue;
+            }
+
             $distance = $this->calculateDistance(
-                $currentLocation->latitude,
-                $currentLocation->longitude,
-                $student->pickup_latitude,
-                $student->pickup_longitude
+                $latitude,
+                $longitude,
+                $geofence->latitude,
+                $geofence->longitude
             );
 
-            $radius = $bus->geofenceSetting->notification_radius;
-
-            if ($distance <= $radius) {
+            if ($distance <= $geofence->geofence_radius) {
                 $this->notifyParents($student);
             }
         }
@@ -52,6 +52,26 @@ class GeofencingService
         return $earthRadius * $c;
     }
 
+    public function isWithinRadius($latitude1, $longitude1, $latitude2, $longitude2, $radius)
+    {
+        $earthRadius = 6371000; // Earth's radius in meters
+
+        $latFrom = deg2rad($latitude1);
+        $lonFrom = deg2rad($longitude1);
+        $latTo = deg2rad($latitude2);
+        $lonTo = deg2rad($longitude2);
+
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+
+        $distance = $earthRadius * $angle;
+
+        return $distance <= $radius;
+    }
+
     private function notifyParents(Student $student)
     {
         foreach ($student->parentNotifications as $notification) {
@@ -63,7 +83,6 @@ class GeofencingService
 
     private function sendFCMNotification(ParentNotification $notification)
     {
-        // Implement FCM notification logic here
         $fcmService = new FCMService();
 
         return $fcmService->send(

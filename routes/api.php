@@ -15,6 +15,8 @@ use App\Http\Controllers\StudentController; // إضافة المسار
 use App\Http\Controllers\BusLocationController;
 use App\Http\Controllers\TestGeofencingController;
 use App\Http\Controllers\UserController;
+// use App\Http\Controllers\GeofencingController;
+
 
 // Authentication Routes
 Route::post('login', [AuthController::class, 'login']);
@@ -82,3 +84,22 @@ Route::prefix('test')->group(function () {
     Route::post('notification', [TestGeofencingController::class, 'testNotification']);
     Route::post('check-proximity/{bus}', [TestGeofencingController::class, 'checkProximity']);
 });
+
+// <?php
+// use App\Http\Controllers\GeofencingController;
+
+Route::prefix('geofencing')->group(function () {
+    Route::post('check-student/{studentId}', [GeofencingController::class, 'checkStudentGeofence']);
+    Route::post('check-bus/{busId}', [GeofencingController::class, 'checkBusGeofence']);
+});
+Route::post('/geofence/create', [GeofencingController::class, 'create']);
+
+
+
+Route::prefix('test')->group(function () {
+    Route::post('simulate-movement/{bus}', [TestGeofencingController::class, 'simulateMovement']);
+    Route::post('notification', [TestGeofencingController::class, 'testNotification']);
+    Route::post('check-proximity/{bus}', [TestGeofencingController::class, 'checkProximity']);
+});
+
+Route::post('geofencing/check-bus-location', [GeofencingController::class, 'checkBusLocation']);

@@ -9,12 +9,21 @@ class CreateGeofencingTable extends Migration
     public function up()
     {
         Schema::create('geofencing', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('student_id')->constrained();
-            $table->decimal('latitude', 10, 8); // Latitude of the geofence center
-            $table->decimal('longitude', 11, 8); // Longitude of the geofence center
-            $table->integer('geofence_radius'); // Radius of the geofence in meters
-            $table->timestamps();
+            $table->id(); // Primary Key (Auto-increment)
+
+            $table->string('name'); // Geofence name (e.g., "School Zone")
+
+            $table->decimal('latitude', 10, 7); // Latitude of the geofence
+            $table->decimal('longitude', 10, 7); // Longitude of the geofence
+            $table->integer('radius')->default(500); // Radius in meters (default: 500m)
+
+            $table->unsignedBigInteger('student_id')->nullable(); // Related student (if applicable)
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+
+            $table->unsignedBigInteger('bus_id')->nullable(); // Related bus (optional)
+            $table->foreign('bus_id')->references('id')->on('buses')->onDelete('cascade');
+
+            $table->timestamps(); // Created_at & Updated_at
         });
     }
 
